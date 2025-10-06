@@ -31,9 +31,10 @@ MyKos adalah aplikasi mobile berbasis Flutter yang dirancang untuk membantu maha
 
 ## Current Plan
 
-### Add Profile Screen with Logout
+### Implement Firebase Authentication
 
-1.  **Create `lib/profile_screen.dart`:** A new file for the profile page UI, which will include a logout button.
-2.  **Implement Logout Logic:** When the logout button is pressed, navigate the user back to the `LoginScreen` and clear the navigation stack.
-3.  **Refactor `home_screen.dart`:** Convert it from a `StatelessWidget` to a `StatefulWidget` to handle the state of the bottom navigation bar.
-4.  **Integrate Profile Screen:** Create a list of page widgets within `HomeScreen` and use the `BottomNavigationBar` to switch between the main home content and the new `ProfileScreen`.
+1.  **Add `firebase_auth` dependency:** Include the package for Firebase Authentication.
+2.  **Refactor `signup_screen.dart`:** Convert to `StatefulWidget` and implement `FirebaseAuth.instance.createUserWithEmailAndPassword`.
+3.  **Refactor `login_screen.dart`:** Convert to `StatefulWidget` and implement `FirebaseAuth.instance.signInWithEmailAndPassword`.
+4.  **Update `main.dart`:** Use a `StreamBuilder` to listen to `authStateChanges()` to automatically navigate users based on their authentication state.
+5.  **Error Handling:** Implement user-friendly error messages for common authentication issues (e.g., wrong password, email already in use).

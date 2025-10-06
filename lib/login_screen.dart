@@ -1,9 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:myapp/home_screen.dart';
 import 'package:myapp/signup_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _signIn() async {
+    if (!mounted) return;
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      if (credential.user != null && mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          (route) => false,
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      String message;
+      if (e.code == 'user-not-found') {
+        message = 'Tidak ada pengguna yang ditemukan untuk email itu.';
+      } else if (e.code == 'wrong-password') {
+        message = 'Kata sandi salah.';
+      } else if (e.code == 'invalid-email') {
+        message = 'Format email tidak valid.';
+      } else {
+        message = 'Gagal masuk. Periksa kembali kredensial Anda.';
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Terjadi kesalahan yang tidak terduga.')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +83,6 @@ class LoginScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Pastikan Anda memiliki logo di path ini
-                    // Jika belum ada, ganti dengan widget lain atau hapus
-                    // Image.asset(
-                    //   'assets/logo.png',
-                    //   height: 100,
-                    // ),
                     const Icon(Icons.home_work, size: 80, color: Colors.black54),
                     const SizedBox(height: 10),
                     const Text(
@@ -49,7 +108,7 @@ class LoginScreen extends StatelessWidget {
                     topRight: Radius.circular(30.0),
                   ),
                 ),
-                child: SingleChildScrollView( // <-- WIDGET YANG DITAMBAHKAN
+                child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -69,9 +128,11 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 32.0),
-                      const TextField(
-                        decoration: InputDecoration(
-                          labelText: 'NAMA',
+                      TextField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: const InputDecoration(
+                          labelText: 'EMAIL',
                           filled: true,
                           fillColor: Color(0xFFE8E8E8),
                           border: OutlineInputBorder(
@@ -81,9 +142,10 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16.0),
-                      const TextField(
+                      TextField(
+                        controller: _passwordController,
                         obscureText: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'PASSWORD',
                           filled: true,
                           fillColor: Color(0xFFE8E8E8),
@@ -94,24 +156,22 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 32.0),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => const HomeScreen()),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black87,
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                        ),
-                        child: const Text(
-                          'Log in',
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                      ),
+                      _isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : ElevatedButton(
+                              onPressed: _signIn,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black87,
+                                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                              ),
+                              child: const Text(
+                                'Log in',
+                                style: TextStyle(fontSize: 18, color: Colors.white),
+                              ),
+                            ),
                       const SizedBox(height: 16.0),
                       TextButton(
                         onPressed: () {},
@@ -131,7 +191,7 @@ class LoginScreen extends StatelessWidget {
                           style: TextStyle(color: Colors.black54),
                         ),
                       ),
-                      const SizedBox(height: 20.0), // Padding tambahan di bawah
+                      const SizedBox(height: 20.0),
                     ],
                   ),
                 ),
