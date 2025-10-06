@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "779835548199",
+    "project_id": "mykos-34464",
+    "storage_bucket": "mykos-34464.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:779835548199:android:01bccd63fca2ccf2986402",
+        "android_client_info": {
+          "package_name": "com.example.myapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "779835548199-2fgtau9eifq4frk1cg1bcfssnq7e2ltf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfFq-qnMtJ8AsELMlohUmEUYqQ7LnKgKQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "779835548199-2fgtau9eifq4frk1cg1bcfssnq7e2ltf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
