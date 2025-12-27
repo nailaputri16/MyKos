@@ -1,8 +1,5 @@
-
 // Kelas `Kos` ini bertindak sebagai "blueprint" atau model data.
 // Tujuannya adalah untuk mendefinisikan struktur data yang jelas untuk setiap entitas "kos".
-// Dengan menggunakan model ini, kita memastikan konsistensi data di seluruh aplikasi
-// dan mengurangi risiko kesalahan pengetikan (typo) pada nama field.
 class Kos {
   // `final` berarti nilai dari properti ini tidak bisa diubah setelah objek `Kos` dibuat.
   // Ini mempromosikan imutabilitas, yang merupakan praktik baik dalam Flutter.
